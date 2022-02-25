@@ -14,7 +14,9 @@
     </div>
 
     <div class="ranking-page">
-      <router-link to="/ranking">Find out here!</router-link>
+      <router-link to="/ranking"
+        ><Button text="Find out more!"></Button
+      ></router-link>
     </div>
   </div>
 </template>
@@ -24,6 +26,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../components/Navbar.vue";
+import Button from "../components/Button";
 
 export default {
   name: "HomeView",
@@ -36,6 +39,7 @@ export default {
   components: {
     FontAwesomeIcon,
     Navbar,
+    Button,
   },
 };
 </script>
@@ -90,20 +94,5 @@ export default {
   color: #333;
   font-size: 1.1rem;
   font-weight: 500;
-}
-
-.ranking-page {
-  font-size: 1rem;
-  padding: 10px 20px;
-  background-color: #ff5f4f;
-  border-radius: 4px;
-  font-weight: 500;
-  text-transform: uppercase;
-  margin-top: 3rem;
-  font-family: "Sora";
-}
-
-.ranking-page a {
-  color: #fff;
 }
 </style>

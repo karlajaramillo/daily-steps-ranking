@@ -1,27 +1,21 @@
 <template lang="">
-  <Navbar />
-
-
-  <div class="">
-    
-  </div>
+    <div>
+        <Navbar/>
+        <UserIdCard/>
+        
+    </div>
 </template>
-
-
 <script>
 import Navbar from "../components/Navbar.vue";
-// import userCard from "../components/userCard.vue";
-
+import UserIdCard from "../components/UserIdCard.vue";
 export default {
   name: "UserIdView",
 
   components: {
     Navbar,
-    // userCard,
+    UserIdCard,
   },
 };
 </script>
 <style lang="">
 </style>
-
-
