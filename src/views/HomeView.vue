@@ -14,7 +14,7 @@
     </div>
 
     <div class="ranking-page">
-      <router-link to="/ranking"
+      <router-link :to="{ name: 'ranking' }"
         ><Button text="Find out more!"></Button
       ></router-link>
     </div>
