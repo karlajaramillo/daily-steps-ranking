@@ -1,30 +1,111 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <router-view />
+  
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+/* font-family: 'Quicksand', sans-serif;
+font-family: 'Sora', sans-serif;
+font-family: 'Zen Kaku Gothic Antique', sans-serif; */
+
+* *,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-nav {
-  padding: 30px;
+/* Remove default padding */
+ul[class],
+ol[class] {
+  padding: 0;
 }
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
 }
 
-nav a.router-link-exact-active {
-  color: #42b983;
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+}
+
+/* Remove list styles on ul, ol elements with a class attribute */
+ul[class],
+ol[class] {
+  list-style: none;
+}
+/* Make images easier to work with */
+img {
+  max-width: 100%;
+}
+
+/* Natural flow and rhythm in articles by default */
+article > * + * {
+  margin-top: 1em;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: 1rem "Zen Kaku Gothic Antique", "Open Sans", Helvetica, Arial,
+    sans-serif;
+  line-height: 1.5;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  background-color: #fcfcfc;
+  color: #333333;
+}
+
+img {
+  width: 100%;
+}
+@media (min-width: 850px) {
+  p {
+    font-size: 1.5rem;
+  }
+  h2 {
+    font-size: 1.8rem;
+  }
+  li {
+    font-size: 1.2rem;
+  }
+  a {
+    font-size: 1.2rem;
+  }
 }
 </style>
