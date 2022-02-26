@@ -1,25 +1,32 @@
 <template lang="">
-<div class="wrapper-userCard">
-    <div>
-      <p>Username: Karla</p>
-      
-    </div>
-		<img src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MnwxNDg3MTY2fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=60"> 
-     <p>Username: Karla {{ $route.params }}</p>
-     <p>User Id {{ id }}</p>
-    <div>
-     
-      <h2>Last week</h2>
-      <div>Graph 1</div>
-    </div>
-    <div>
-      <h2>Last month</h2>
-      <div>Graph 2</div>
-    </div>
-    <div>
-      <h2>Overall daily average</h2>
-      <div>Graph 3</div>
-    </div>
+<div v-if="userData" class="wrapper-userCard">
+	<img src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MnwxNDg3MTY2fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=60"> 
+    <p>Username: {{ $route.params }}</p>
+    <h1>Hello {{ username }}</h1>
+    <p>User Id {{ userData }}</p>
+  <div>
+    <table border="">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Active minutes</th>
+          <th>Calories</th>
+          <th>Distance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in userData" :key="user.id">
+          <td>{{user.date}}</td>
+          <td>{{user.active_minutes}}</td>
+          <td>{{user.calories}}</td>
+          <td>{{user.distance}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+  <div v-else>
+    <p class="loading">Loading ranking...</p>
   </div>
 
 </template>
@@ -47,9 +54,9 @@ const fetchPage = async (url) => {
 export default {
   data() {
     return {
-      id: this.$route.params.id,
+      username: this.$route.params.id,
       //username: this.$route.params.id,
-      userRankings: [],
+      userData: null,
     };
   },
   name: "UserIdCard",
@@ -58,10 +65,13 @@ export default {
     this.showUser();
   },
   methods: {
+    getData() {
+      console.log(userData);
+    },
     async showUser() {
       console.log("in show ranking");
       let data = await fetchPage(
-        "https://step-meter-pp4publmdq-ez.a.run.app/hrodriguez/workouts"
+        `https://step-meter-pp4publmdq-ez.a.run.app/${this.username}/workouts`
       );
       //console.log(`Next: ${data.next}`);
       // while (data.next) {
@@ -70,8 +80,8 @@ export default {
       //   results.concat(data.results);
       // }
       console.log("after while");
-      this.userRankings = data.results;
-      userRankings: this.userRankings;
+      this.userData = data.results;
+      console.log(this.userData);
       console.log(data.results);
     },
   },
@@ -82,4 +92,5 @@ img {
   box-shadow: 5px 5px 20px rgb(179 179 179 / 40%);
   border-radius: 4px;
 }
+
 </style>

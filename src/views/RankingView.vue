@@ -4,50 +4,58 @@
   <!-- <RankingCard title="Karla" @add-ranking="addRanking"/> -->
 
   <div class="ranking-page-wrapper">
-    <Button class="sortBySteps" @click="sortByHandle('avg_steps')" text="Sort by Steps"></Button>
-    <Button class="sortBySteps" @click="sortUpdate('avg_steps')" text="Sort by Steps"></Button>
+   
 
-    <div>
-      <table border="">
+    <Button class="sortBySteps" @click="sortToggle('avg_steps')" v-bind:class="[sortByKey === 'avg_steps' ? sortDirection : '']" text="Test 1"></Button> 
+
+    <div v-if="rankings.length">
+       <!-- <Button class="sortBySteps" @click="sortToggle('avg_steps')" v-bind:class="[sortByKey === 'avg_steps' ? sortDirection : '']" text="Test 1"></Button> 
+    <Button text="Average Steps Trial" @click="sort('avg_steps')" v-bind:class="[sortBy === 'avg_steps' ? sortDirection : '']"></Button>  -->
+
+      <table class="table-section section-step" border="0" cellpadding="0" cellspacing="0">
         <thead>
-            <tr>
-              <th>Name</th>
-              <th @click="sortBy('avg_steps')" v-bind:class="[sortBy === 'avg_steps' ? sortDirection : '']">Average Steps</th>
+            <tr class="table-h-wrapper">
+              <th class="table-h">Name</th>
+              <!-- <th class="table-h" @click="sortBy('avg_steps')" v-bind:class="[sortBy === 'avg_steps' ? sortDirection : '']">Average Steps</th> -->
+              <th class="table-h" @click="sortBy('avg_steps')">Average Steps</th>
+              <th class="table-h">Discover</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="ranking in rankings" :key="ranking.id">
+            <!-- 'sortedArray' is the computed property -->
+            <!-- <tr v-for="ranking in rankings" :key="ranking.id">    -->
+            <tr v-for="ranking in sortByAsc" :key="ranking.id">        
               <td>{{ranking.username}}</td>
               <td>{{ranking.avg_steps}}</td>
+              <td> <router-link :to="{name: 'userId', params: { id: ranking.username }}"><Button class="discover-btn" text="Discover"></Button></router-link>
+</td>
             </tr>
           </tbody>
       </table>
     </div>
+    <!-- <div v-else>
+      <p>Loading ranking...</p>
+    </div> -->
 
-    <div class="wrapper-cards">
+    <!-- <div v-if="rankings.length" class="wrapper-cards">
       <Button class="discover-btn" @click="handleSortBy()" text="Sort by Steps"></Button>
-    <div class="wrapper-rankingCard" v-for="ranking in rankings" title="Karla" :key="ranking.id">
-      <div>
-        <h2>Username: {{ranking.username}}</h2>
-      </div>
-      <div>
-        <p>Average steps: {{ranking.avg_steps}} </p>
-      </div>
-      <div class="btn-wrapper">
-        <!-- <router-link :to="{name: 'userId', params: { id: ranking.id }}"><Button class="discover-btn" text="Discover"></Button></router-link> -->
-        <router-link :to="{name: 'userId', params: { id: ranking.username }}"><Button class="discover-btn" text="Discover"></Button></router-link>
+      <div class="wrapper-rankingCard" v-for="ranking in rankings" title="Karla" :key="ranking.id">
+        <div>
+          <h2>Username: {{ranking.username}}</h2>
+        </div>
+        <div>
+          <p>Average steps: {{ranking.avg_steps}} </p>
+        </div>
+        <div class="btn-wrapper">
+          <router-link :to="{name: 'userId', params: { id: ranking.username }}"><Button class="discover-btn" text="Discover"></Button></router-link>
+        </div>
       </div>
     </div>
-    </div>
+    <div v-else>
+      <p>Loading ranking...</p>
+    </div> -->
   </div>
-<!-- 
-  avg_active_minutes: 80
-avg_calories: 317
-avg_distance: 6465
-avg_steps: 8484
-date_joined: "2022-01-17T15:57:36.904429Z"
-email: "xnoble@example.com"
-id: 101 -->
+
 
 </template>
 
@@ -85,8 +93,8 @@ export default {
   data() {
     return {
       rankings: [],
-      sortBy: "avg_steps", //key to sort by default
-      sortDirection: "asc", // sort order
+      sortByKey: "avg_steps", //key to sort by default
+      sortDirection: "asc", // DEFAULT - keep track of the sort order: ascending or descending
     };
   },
   created: function () {
@@ -94,42 +102,67 @@ export default {
   },
   // to make the value reactive
   computed: {
-    // sortedRaking() {
-    //   return this.rankings.map((item) => item.avg_steps).sort((a, b) => b - a);
-    // },
-    sortedRanking: function () {
-      return [...this.rankings].sort((a1, a2) => {
-        let modifier = 1;
-        if (this.sortDirection === "desc") modifier = -1;
-        if (a1[this.sortBy] < a2[this.sortBy]) return -1 * modifier;
-        if (a1[this.sortBy] > a2[this.sortBy]) return 1 * modifier;
-        return 0;
-      });
+    // THIS METHOD WORK AND IS REACTIVE - CHANGES THE STATE - ASCENDING
+    sortByAsc() {
+      return this.rankings.sort(
+        (a, b) => b[this.sortByKey] - a[this.sortByKey]
+      );
     },
+
+    // THIS METHOD WORK AND IS REACTIVE - CHANGES THE STATE - ASCENDING
+
+    // sortByAsc() {
+    //   return this.rankings.sort((a, b) => {
+    //     let modifier = 1;
+    //     if (this.sortDirection === "desc") modifier = -1;
+    //     return a[this.sortByKey] < b[this.sortByKey]
+    //       ? -1 * modifier
+    //       : a[this.sortByKey] > a[this.sortByKey]
+    //       ? 1 * modifier
+    //       : 0;
+    //   });
+    // },
+
+    // OPTION 1 - DON'T WORK
+    // sortByAsc() {
+    //   function compare(a, b) {
+    //     if (a[this.sortByKey] < b[this.sortByKey]) return -1;
+    //     if (a[this.sortByKey] > b[this.sortByKey]) return 1;
+    //     return 0;
+    //   }
+    //   return this.rankings.sort(compare);
+    // },
+    // OPTION 2 - DON'T WORK
+    // inside this computed property we call the method sort() an we pass inside the sorting logic
+    // sortedRanking() {
+    //   return this.rankings.sort((r1, r2) => {
+    //     let modifier = 1;
+    //     if (this.sortDirection === "desc") modifier = -1;
+    //     if (r1[this.sortBy] < r2[this.sortBy]) return -1 * modifier;
+    //     if (r1[this.sortBy] > r2[this.sortBy]) return 1 * modifier;
+    //     return 0;
+    //   });
+    // },
   },
   methods: {
-    onClick() {
-      const result = this.rankings
-        .map((item) => item.avg_steps)
-        .sort((a, b) => b - a);
-      console.log(result);
-      return result;
+    // ----- SORT METHODS --
+    // THIS METHOD WORKS WITH CLICK- BUT DON'T CHANGE THE STATE
+    sortBy(prop) {
+      this.rankings.sort((a, b) => b[prop] - a[prop]);
     },
-    handleSortBy() {
-      rankings = sortByItem("avg_steps", this.rankings);
-      console.log(this.rankings);
+    // OPTION 1 - IT WORKS - to change the property
+    // to change the sortBy ->keep track of the property to sort, and sortDirection of the arrow
+    sortToggle(s) {
+      if (s === this.sortByKey) {
+        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+      }
+      this.sortByKey = s;
+      console.log("sortByKey", this.sortByKey);
+      console.log("sortDirection", this.sortDirection);
     },
+    // ----- END - SORT METHODS --
 
-    compareNumbers(a, b) {
-      return b - a;
-    },
-    sortByItem(key, values) {
-      const handler = compareNumbers;
-      return [...values].sort((a, b) => {
-        return handler(a[key], b[key]);
-      });
-    },
-
+    // Fetch
     async showRanking() {
       console.log("in show ranking");
       let data = await fetchPage(
@@ -147,36 +180,111 @@ export default {
       console.log(data.results);
     },
   },
-  sort: function (s) {
-    if (s === this.sortBy) {
-      this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
-    }
-    this.sortBy = s;
-  },
-  sortByHandle(prop) {
-    console.log(prop);
-    //this.rankings.sort((a, b) => (a[prop] < b[prop] ? -1 : 1));
-  },
-  sortUpdate(e) {
-    console.log("hello");
-  },
 };
 </script>
 <style scoped>
+table {
+  /* border-collapse: collapse; */
+  border-spacing: 0;
+}
+td {
+  border-style: hidden !important;
+}
+tbody {
+  text-align: center;
+}
+.table-section {
+  border-top: 1em solid transparent;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-step {
+  border-radius: 0.25em;
+  border-collapse: separate;
+  width: 100%;
+  margin: 3rem auto;
+  font-size: 1.2rem;
+  width: 450px;
+}
+.section-step th {
+  text-align: center;
+  padding: 10px 20px;
+}
+.section-step td {
+  font-size: 1.2rem;
+  text-align: left;
+  border-width: 3px 0;
+  width: 50%;
+  border-color: #efefef;
+  background-color: #efefef;
+  color: #333;
+  padding: 40px 25px;
+}
+.section-step td:first-child {
+  border-left-width: 3px;
+  border-radius: 5px 0 0 5px;
+}
+.section-step td:last-child {
+  border-right-width: 3px;
+  border-radius: 0 5px 5px 0;
+}
+.section-step thead {
+  display: table;
+}
+.section-step tbody {
+  display: table;
+  table-layout: fixed;
+  border-spacing: 0 10px;
+  flex-direction: column;
+  display: flex;
+}
+
+td,
+th {
+  border: none;
+}
+
+.table-h-wrapper th:first-child {
+  background-color: transparent;
+  color: rgb(71, 71, 71);
+}
+
+.table-h-wrapper th:nth-child(2n) {
+  padding: 10px 20px;
+  background: #fe5f4f;
+  color: #fff;
+  font-family: "Sora";
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 0.8rem;
+}
 .ranking-page-wrapper {
   padding-top: 4rem;
   padding-right: 3rem;
   padding-left: 3rem;
+  display: flex;
+  flex-direction: column;
 }
 .discover-btn {
   background-color: #fff;
   border-color: #333;
   color: #333;
-  width: 140px;
   font-size: 0.8rem;
   padding: 10px 5px;
   border: 2px solid #333;
+  margin-top: 0;
 }
+
+.discover-btn:hover {
+  background: #474747;
+  border-color: #474747;
+  box-shadow: 0 0 8px rgb(0 0 0 / 26%);
+  color: #fff;
+}
+
 .btn-wrapper {
   align-self: center;
 }
