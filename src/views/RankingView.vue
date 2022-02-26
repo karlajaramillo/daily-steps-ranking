@@ -106,7 +106,11 @@ export default {
   },
   created: function () {
     this.showRanking();
-    this.showRankingByLastMonth();
+    //this.showRankingByLastMonth();
+    // By last month
+    this.showRankingByLastDate(this.getLastMonth, this.rankingsByLastMonth);
+    // By last week
+    this.showRankingByLastDate(this.getLastWeek, this.rankingsByLastWeek);
   },
   // to make the value reactive
   computed: {
@@ -201,6 +205,7 @@ export default {
         today.getMonth(),
         today.getDate() - 7
       );
+      console.log(lastweek);
       return lastweek.toISOString().split("T").slice(0, 1).join();
     }, // Result -> '2022-02-18'
     // ----- Method to find last month data --
@@ -211,6 +216,7 @@ export default {
         today.getMonth() - 1,
         today.getDate()
       );
+      console.log(lastmonth);
       return lastmonth.toISOString().split("T").slice(0, 1).join();
     }, // Result -> '2022-01-25'
 
@@ -228,17 +234,34 @@ export default {
       // }
       console.log("after while");
       this.rankings = data.results;
-      rankings: this.rankings;
       console.log(data.results);
     },
     // ----- Fetch method to get last month data --
-    async showRankingByLastMonth() {
-      const lastMonth = this.getLastMonth();
+    // async showRankingByLastMonth() {
+    //   const lastMonth = this.getLastMonth();
+    //   const today = this.getToday();
+    //   const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${lastMonth}&workouts_to=${today}`;
+    //   console.log("today: ", today);
+    //   console.log("lastMonth:", lastMonth);
+    //   console.log("in show ranking by month");
+    //   let data = await fetchPage(endpoint);
+    //   //console.log(`Next: ${data.next}`);
+    //   // while (data.next) {
+    //   //  data = await fetchPage(data.next);ftoken
+    //   //   console.log(data.results);
+    //   //   results.concat(data.results);
+    //   // }
+    //   console.log("after while");
+    //   this.rankingsByLastMonth = data.results;
+    //   console.log("Last month data", data.results);
+    // },
+
+    async showRankingByLastDate(handler, rankingState) {
+      const lastDate = handler();
       const today = this.getToday();
-      const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${lastMonth}&workouts_to=${today}`
+      const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${lastDate}&workouts_to=${today}`;
       console.log("today: ", today);
-      console.log("lastMonth:", lastMonth);
-      console.log("in show ranking by month");
+      console.log("lastDate:", lastDate);
       let data = await fetchPage(endpoint);
       //console.log(`Next: ${data.next}`);
       // while (data.next) {
@@ -247,9 +270,9 @@ export default {
       //   results.concat(data.results);
       // }
       console.log("after while");
-      this.rankingsByLastMonth = data.results;
-      rankingsByLastMonth: this.rankingsByLastMonth;
-      console.log("Last month data", data.results);
+      rankingState = data.results;
+      console.log("rankingState", rankingState);
+      console.log("Last data", data.results);
     },
   },
 };
