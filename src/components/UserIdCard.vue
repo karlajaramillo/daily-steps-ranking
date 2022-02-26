@@ -1,6 +1,11 @@
 <template lang="">
-<div v-if="userData" class="wrapper-userCard">
-	<img src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MnwxNDg3MTY2fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=60"> 
+<div v-if="userData" class="">
+  <div class="wrapper-user-card">
+    <div><img src=""></div> 
+    <h1>Uncover the hidden data and go the the next level</h1>
+    <p>Check statistics, enjoy the process and improve performance, keeping your productivity up.</p>
+  </div>
+	
     <p>Username: {{ $route.params }}</p>
     <h1>Hello {{ username }}</h1>
     <p>User Id {{ userData }}</p>
@@ -88,9 +93,30 @@ export default {
 };
 </script>
 <style scoped>
+.wrapper-user-card {
+  background-color: #52cdfd;
+  width: 100%;
+  height: 60vh;
+  padding: 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  box-shadow: 1px 1px 3px rgb(34 34 34 / 15%);
+}
+
+.wrapper-user-card h1 {
+  margin-top: 3rem;
+  font-size: 1.5rem;
+  font-family: "Sora";
+  font-weight: 500;
+}
+
+.wrapper-user-card p {
+  margin-top: 1rem;
+  font-size: 1.8;
+}
 img {
   box-shadow: 5px 5px 20px rgb(179 179 179 / 40%);
   border-radius: 4px;
 }
-
 </style>
