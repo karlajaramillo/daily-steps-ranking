@@ -18,10 +18,9 @@
             <tr class="table-h-wrapper">
               <th class="table-h">Name</th>
               <!-- <th class="table-h" @click="sortBy('avg_steps')" v-bind:class="[sortBy === 'avg_steps' ? sortDirection : '']">Average Steps</th> -->
-              <!-- <th class="table-h" @click="switchOrder('avg_steps')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Average Steps</th> -->
-              <th class="table-h" @click="switchOrder()" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Average Steps</th>
-              <th class="table-h" @click="switchOrder()" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last month</th>
-              <th class="table-h" @click="switchOrder()" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last week</th>
+              <th class="table-h" @click="switchOrderProp('avg_steps')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Average Steps</th>
+              <!-- <th class="table-h" @click="switchOrderProp('avg_steps_week')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last month</th> -->
+              <th class="table-h" @click="switchOrderProp('avg_steps_month')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last week</th>
               <th class="table-h">Discover</th>
             </tr>
           </thead>
@@ -37,6 +36,58 @@
           </tbody>
       </table>
     </div>
+
+  <div>
+    <Button text="Sort by last week" @click="switchOrderProp('avg_steps_week')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button> 
+
+      <!-- 'sortedArray' is the computed property -->
+      <!-- <tr v-for="ranking in rankings" :key="ranking.id">    -->
+      <div v-for="rankingsByLastWeek in sortByAsc" :key="rankingsByLastWeek.id"> 
+        <p>{{rankingsByLastWeek}}</p>       
+        <p>{{rankingsByLastWeek.username}}</p>
+        
+        <div v-if="rankingsByLastWeek.avg_steps_week">
+            <p>Steps last week: {{rankingsByLastWeek.avg_steps_week}}</p>
+        </div>
+          <div v-else>
+      <p>Average Steps last week: Ups! no steps last week.</p>
+      </div>
+
+        <router-link :to="{name: 'userId', params: { id: rankingsByLastWeek.username }}"><Button class="discover-btn" text="Discover"></Button></router-link>
+      </div>
+  </div>
+
+
+  <div v-if="rankingsByLastMonth.length" class="wrapper-cards">
+    <!-- <Button text="Sort by last month" @click="switchOrderProp('avg_steps_month')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button>  -->
+    <Button text="Sort by last month" @click="switchOrderProp('avg_steps_month')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button> 
+
+      <!-- 'sortedArray' is the computed property -->
+      <!-- <tr v-for="ranking in rankings" :key="ranking.id">    -->
+      <div v-for="rankingsByLastMonth in sortByAsc" :key="rankingsByLastMonth.id">        
+        <p>{{rankingsByLastMonth}}</p>
+        <!-- <p>{{rankingsByLastMonth.avg_steps_month}}</p> -->
+          <p>{{rankingsByLastMonth}}</p>
+        <p>Steps by month: {{rankingsByLastMonth.avg_steps_month}}</p>
+        
+        <!-- <div v-if="rankingsByLastMonth.avg_steps_month">
+            <p>Steps last month: {{rankingsByLastMonth.avg_steps_month}}</p>
+        </div> 
+               <div v-else>
+      <p>Average Steps last month: Ups! no steps last month.</p>
+      </div>
+        
+        -->
+        <div v-if="rankingsByLastMonth.avg_steps">
+             <p>Steps last month: {{rankingsByLastMonth.avg_steps}}</p>
+        </div>
+          <div v-else>
+      <p>Average Steps last month: Ups! no steps last month.</p>
+      </div>
+
+        <router-link :to="{name: 'userId', params: { id: rankingsByLastMonth.username }}"><Button class="discover-btn" text="Discover"></Button></router-link>
+      </div>
+  </div>
     <!-- <div v-else>
       <p>Loading ranking...</p>
     </div> -->
@@ -102,12 +153,10 @@ export default {
       sortByKey: "avg_steps", //key to sort by default
       sortDirection: "asc", // DEFAULT - keep track of the sort order: ascending or descending
       toggleOrder: false,
+      toggleOrderMonth: false,
     };
   },
   created: function () {
-    this.showRanking();
-    //this.showRankingByLastMonth();
-    // By last month
     this.showRankingByLastDate(
       this.getLastMonth,
       this.rankingsByLastMonth,
@@ -119,21 +168,81 @@ export default {
       this.rankingsByLastWeek,
       "week"
     );
+    this.showRanking();
+    //this.showRankingByLastMonth();
+    // By last month
   },
   // to make the value reactive
   computed: {
     // THIS METHOD WORK AND IS REACTIVE - CHANGES THE STATE - ASCENDING
     sortByAsc() {
+      console.log(this.sortByKey);
       if (this.toggleOrder) {
-        return this.rankings.sort(
-          (a, b) => b[this.sortByKey] - a[this.sortByKey]
-        );
+        let sorted;
+        if (this.sortByKey === "avg_steps") {
+          console.log(this.sortByKey);
+          sorted = this.rankings.sort(
+            (a, b) => b[this.sortByKey] - a[this.sortByKey]
+          );
+        } else if (this.sortByKey === "avg_steps_month") {
+          console.log(this.sortByKey);
+          sorted = this.rankingsByLastMonth.sort(
+            (a, b) => b[this.sortByKey] - a[this.sortByKey]
+          );
+        } else if (this.sortByKey === "avg_steps_week") {
+          console.log(this.sortByKey);
+          sorted = this.rankingsByLastWeek.sort(
+            (a, b) => b[this.sortByKey] - a[this.sortByKey]
+          );
+        }
+        return sorted;
       } else {
-        return this.rankings.sort(
-          (a, b) => a[this.sortByKey] - b[this.sortByKey]
-        );
+        // return this.rankings.sort(
+        //   (a, b) => a[this.sortByKey] - b[this.sortByKey]
+        // );
+        let sortedDesc;
+        if (this.sortByKey === "avg_steps") {
+          console.log(this.sortByKey);
+          sortedDesc = this.rankings.sort(
+            (a, b) => a[this.sortByKey] - b[this.sortByKey]
+          );
+        } else if (this.sortByKey === "avg_steps_month") {
+          console.log(this.sortByKey);
+          sortedDesc = this.rankingsByLastMonth.sort(
+            (a, b) => a[this.sortByKey] - b[this.sortByKey]
+          );
+        } else if (this.sortByKey === "avg_steps_week") {
+          console.log(this.sortByKey);
+          sortedDesc = this.rankingsByLastWeek.sort(
+            (a, b) => a[this.sortByKey] - b[this.sortByKey]
+          );
+        }
+        return sortedDesc;
       }
     },
+
+    // sortByAscMonth() {
+    //   if (this.toggleOrderMonth) {
+    //     return this.rankingsByLastMonth.sort(
+    //       (a, b) => b[this.sortByKey] - a[this.sortByKey]
+    //     );
+    //   } else {
+    //     return this.rankingsByLastMonth.sort(
+    //       (a, b) => a[this.sortByKey] - b[this.sortByKey]
+    //     );
+    //   }
+    // },
+    // sortByAscWeek() {
+    //   if (this.toggleOrderWeek) {
+    //     return this.rankingsByLastWeek.sort(
+    //       (a, b) => b[this.sortByKey] - a[this.sortByKey]
+    //     );
+    //   } else {
+    //     return this.rankingsByLastWeek.sort(
+    //       (a, b) => a[this.sortByKey] - b[this.sortByKey]
+    //     );
+    //   }
+    // },
 
     // THIS METHOD WORK AND IS REACTIVE - CHANGES THE STATE - ASCENDING
 
@@ -186,18 +295,26 @@ export default {
     //   console.log("sortByKey", this.sortByKey);
     //   console.log("sortDirection", this.sortDirection);
     // },
+
+    // IMPORTANT
     // with props to change field
-    // switchOrder(prop) {
-    //   this.toggleOrder = !this.toggleOrder;
-    //   this.sortByKey = prop; //set the field to sort -> 'avg_steps'
-    //   console.log("toggle", this.toggleOrder);
-    //   console.log("sortByKey", this.sortByKey);
-    // },
-    switchOrder() {
+    switchOrderProp(prop) {
       this.toggleOrder = !this.toggleOrder;
+      this.sortByKey = prop; //set the field to sort -> 'avg_steps'
       console.log("toggle", this.toggleOrder);
       console.log("sortByKey", this.sortByKey);
     },
+
+    switchOrderMonth() {
+      this.toggleOrderMonth = !this.toggleOrderMonth;
+      console.log("toggle month", this.toggleOrderMonth);
+      console.log("sortByKey", this.sortByKey);
+    },
+    // switchOrder() {
+    //   this.toggleOrder = !this.toggleOrder;
+    //   console.log("toggle", this.toggleOrder);
+    //   console.log("sortByKey", this.sortByKey);
+    // },
     // ----- END - SORT METHODS --
 
     // ----- Method to get today in format YY-MM-DD --
@@ -260,7 +377,9 @@ export default {
       //   console.log(data.results);
       //   results.concat(data.results);
       // }
-      const results = data.results.map((userData) => {
+      const finalResults = data.results.map((userData) => {
+        // if (period === "month") userData.avg_steps = userData.avg_steps_week;
+        // if (period === "month") userData.avg_steps = userData.avg_steps_month;
         if (period === "month") userData.avg_steps_month = userData.avg_steps;
         if (period === "week") userData.avg_steps_week = userData.avg_steps;
 
@@ -270,10 +389,14 @@ export default {
       // console.log(result);
 
       console.log("after while");
-      rankingState = data.results;
-      console.log("rankingState", rankingState);
-      console.log(period, data.results);
-      console.log("results", [period, results]);
+      console.log("results", [period, finalResults]);
+      //rankingState = finalResult;
+      if (period === "month") this.rankingsByLastMonth = finalResults;
+      if (period === "week") this.rankingsByLastWeek = finalResults;
+      console.log("this.rankingsByLastMonth", this.rankingsByLastMonth);
+      console.log("this.rankingsByLastWeek", this.rankingsByLastWeek);
+      //console.log("rankingState", rankingState);
+      // console.log(period, data.results);
     },
   },
 };
