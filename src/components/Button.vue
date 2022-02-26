@@ -17,7 +17,6 @@ export default {
   cursor: pointer;
   transition: all 0.2s linear;
   margin-top: 30px;
-  width: 150px;
   font-size: 1rem;
   padding: 10px 20px;
   background-color: #ff5f4f;
@@ -40,6 +39,7 @@ export default {
 
 @media (min-width: 768px) {
   .button {
+    font-size: 2rem;
   }
 }
 </style>

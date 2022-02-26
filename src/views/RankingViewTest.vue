@@ -9,38 +9,34 @@
       <Button class="discover-btn" text="Last Month" @click="switchOrderProp('avg_steps_month')" v-bind:class="[toggleOrderMonth ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button> 
       <Button class="discover-btn"  text="Last Week" @click="switchOrderProp('avg_steps_week')" v-bind:class="[toggleOrderWeek ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button> 
     </div>
-    <div class="cards-flex-wrapper">
-            <!-- 'sortedByAsc' is the computed property -->
-      <div class="card-user-wrapper" v-for="ranking in sortByAsc" :key="ranking.id">
+    
+      <!-- 'sortedArray' is the computed property -->
+      <!-- <tr v-for="ranking in rankings" :key="ranking.id">    -->
+      <div class="card-user-wrapper" v-for="ranking in sortByAsc" :key="ranking.id"> 
         <div class="username"><h1>{{ranking.username}}</h1></div>
         <div class="email"><p>e-mail: {{ranking.email}}</p></div>
-        <div><img :src=getRandom() alt="profile-image"> </div> 
+        <div><img src="https://cdn-icons-png.flaticon.com/512/2553/2553967.png" alt="profile-image"> </div> 
         <div class="ranking-text">
           <div >
             <p class="ranking-msg">Average steps</p>
             <p class="ranking-number">{{ranking.avg_steps}}</p>
           </div>
-        
+        </div>
           <!-- <div class="ranking-text" v-else>
             <p >Ups! no steps last week.</p>
         </div> -->
 
-        <router-link :to="{name: 'userId', params: { id: ranking.username }}" class="sort-wrapper-button"><Button class="details-btn" text="Discover"></Button></router-link>
+        <router-link :to="{name: 'userId', params: { id: ranking.username }}"><Button class="details-btn" text="Discover"></Button></router-link>
       </div>
-      </div> 
     </div>
-
-    </div>
-</template>
+  </template>
 
 
 <script>
-// @ is an alias to /src
+  // @ is an alias to /src
 import Navbar from "../components/Navbar.vue";
 import RankingCard from "../components/RankingCard.vue";
 import Button from "../components/Button.vue";
-import girl from "../assets/girl.png";
-import boy from "../assets/runner.png";
 const fetchPage = async (url) => {
   console.log("in fetchPage");
   console.log(url);
@@ -80,7 +76,6 @@ export default {
     };
   },
   created: function () {
-    // By last month
     this.showRankingByLastDate(
       this.getLastMonth,
       this.rankingsByLastMonth,
@@ -93,6 +88,8 @@ export default {
       "week"
     );
     this.showRanking();
+    //this.showRankingByLastMonth();
+    // By last month
   },
   // to make the value reactive
   computed: {
@@ -147,15 +144,83 @@ export default {
         return sorted;
       }
     },
+
+    // sortByAscMonth() {
+    //   if (this.toggleOrderMonth) {
+    //     return this.rankingsByLastMonth.sort(
+    //       (a, b) => b[this.sortByKey] - a[this.sortByKey]
+    //     );
+    //   } else {
+    //     return this.rankingsByLastMonth.sort(
+    //       (a, b) => a[this.sortByKey] - b[this.sortByKey]
+    //     );
+    //   }
+    // },
+    // sortByAscWeek() {
+    //   if (this.toggleOrderWeek) {
+    //     return this.rankingsByLastWeek.sort(
+    //       (a, b) => b[this.sortByKey] - a[this.sortByKey]
+    //     );
+    //   } else {
+    //     return this.rankingsByLastWeek.sort(
+    //       (a, b) => a[this.sortByKey] - b[this.sortByKey]
+    //     );
+    //   }
+    // },
+
+    // THIS METHOD WORK AND IS REACTIVE - CHANGES THE STATE - ASCENDING
+
+    // sortByAsc() {
+    //   return this.rankings.sort((a, b) => {
+    //     let modifier = 1;
+    //     //if (this.sortDirection === "desc") modifier = -1;
+    //     return a[this.sortByKey] < b[this.sortByKey]
+    //       ? -1 * modifier
+    //       : a[this.sortByKey] > a[this.sortByKey]
+    //       ? 1 * modifier
+    //       : 0;
+    //   });
+    // },
+
+    // OPTION 1 - DON'T WORK
+    // sortByAsc() {
+    //   function compare(a, b) {
+    //     if (a[this.sortByKey] < b[this.sortByKey]) return -1;
+    //     if (a[this.sortByKey] > b[this.sortByKey]) return 1;
+    //     return 0;
+    //   }
+    //   return this.rankings.sort(compare);
+    // },
+    // OPTION 2 - DON'T WORK
+    // inside this computed property we call the method sort() an we pass inside the sorting logic
+    // sortedRanking() {
+    //   return this.rankings.sort((r1, r2) => {
+    //     let modifier = 1;
+    //     if (this.sortDirection === "desc") modifier = -1;
+    //     if (r1[this.sortBy] < r2[this.sortBy]) return -1 * modifier;
+    //     if (r1[this.sortBy] > r2[this.sortBy]) return 1 * modifier;
+    //     return 0;
+    //   });
+    // },
   },
   methods: {
-    // Get random images
-    getRandom() {
-      const images = [boy, girl];
-      console.log(images);
-      return images[Math.floor(Math.random() * images.length)];
-    },
     // ----- SORT METHODS --
+    // THIS METHOD WORKS WITH CLICK- BUT DON'T CHANGE THE STATE
+    // sortBy(prop) {
+    //   this.rankings.sort((a, b) => b[prop] - a[prop]);
+    // },
+    // // OPTION 1 - IT WORKS - to change the property
+    // // to change the sortBy ->keep track of the property to sort, and sortDirection of the arrow
+    // sortToggle(s) {
+    //   if (s === this.sortByKey) {
+    //     this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+    //   }
+    //   this.sortByKey = s;
+    //   console.log("sortByKey", this.sortByKey);
+    //   console.log("sortDirection", this.sortDirection);
+    // },
+
+    // IMPORTANT
     // with props to change field
     switchOrderProp(prop) {
       this.sortByKey = prop; //set the field to sort -> 'avg_steps'
@@ -169,6 +234,18 @@ export default {
       }
       console.log("sortByKey", this.sortByKey);
     },
+
+    switchOrderMonth() {
+      this.toggleOrderMonth = !this.toggleOrderMonth;
+      console.log("toggle month", this.toggleOrderMonth);
+      console.log("sortByKey", this.sortByKey);
+    },
+    // switchOrder() {
+    //   this.toggleOrder = !this.toggleOrder;
+    //   console.log("toggle", this.toggleOrder);
+    //   console.log("sortByKey", this.sortByKey);
+    // },
+    // ----- END - SORT METHODS --
 
     // ----- Method to get today in format YY-MM-DD --
     getToday() {
@@ -231,23 +308,30 @@ export default {
       //   results.concat(data.results);
       // }
       const finalResults = data.results.map((userData) => {
+        // if (period === "month") userData.avg_steps = userData.avg_steps_week;
+        // if (period === "month") userData.avg_steps = userData.avg_steps_month;
         if (period === "month") userData.avg_steps_month = userData.avg_steps;
         if (period === "week") userData.avg_steps_week = userData.avg_steps;
 
         return userData;
       });
+
+      // console.log(result);
+
+      console.log("after while");
+      console.log("results", [period, finalResults]);
       //rankingState = finalResult;
       if (period === "month") this.rankingsByLastMonth = finalResults;
       if (period === "week") this.rankingsByLastWeek = finalResults;
+      // console.log("this.rankingsByLastMonth", this.rankingsByLastMonth);
+      // console.log("this.rankingsByLastWeek", this.rankingsByLastWeek);
+      //console.log("rankingState", rankingState);
+      // console.log(period, data.results);
     },
   },
 };
 </script>
 <style scoped>
-.cards-flex-wrapper {
-  display: flex;
-  flex-direction: column;
-}
 .card-user-wrapper {
   padding-top: 10rem;
   margin-top: 2rem;
@@ -262,15 +346,9 @@ export default {
 }
 .card-user-wrapper img {
   width: 200px;
-  height: 200px;
-  object-fit: contain;
   border-radius: 50%;
-  background-color: #f8eddb;
-  box-shadow: 0px 0px 4px rgb(79 78 78 / 15%);
-}
-
-.card-flex-wrappper > *:last-child {
-  justify-self: flex-start;
+  background-color: #fffdfd;
+  box-shadow: 0px 0px 4px rgb(34 34 34 / 15%);
 }
 
 .username {
@@ -302,10 +380,6 @@ export default {
   font-family: "Oswald";
 }
 
-.sort-wrapper-button {
-  display: flex;
-  justify-content: center;
-}
 .details-btn {
   background-color: #fdb12a;
   border-color: #fdb12a;
@@ -361,6 +435,84 @@ export default {
   margin-right: 4px;
 }
 
+table {
+  /* border-collapse: collapse; */
+  border-spacing: 0;
+}
+td {
+  border-style: hidden !important;
+}
+tbody {
+  text-align: center;
+}
+.table-section {
+  border-top: 1em solid transparent;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-step {
+  border-radius: 0.25em;
+  border-collapse: separate;
+  width: 100%;
+  margin: 3rem auto;
+  font-size: 1.2rem;
+  width: 450px;
+}
+.section-step th {
+  text-align: center;
+  padding: 10px 20px;
+}
+.section-step td {
+  font-size: 1.2rem;
+  text-align: left;
+  border-width: 3px 0;
+  width: 50%;
+  border-color: #efefef;
+  background-color: #efefef;
+  color: #333;
+  padding: 40px 25px;
+}
+.section-step td:first-child {
+  border-left-width: 3px;
+  border-radius: 5px 0 0 5px;
+}
+.section-step td:last-child {
+  border-right-width: 3px;
+  border-radius: 0 5px 5px 0;
+}
+.section-step thead {
+  display: table;
+}
+.section-step tbody {
+  display: table;
+  table-layout: fixed;
+  border-spacing: 0 10px;
+  flex-direction: column;
+  display: flex;
+}
+
+td,
+th {
+  border: none;
+}
+
+.table-h-wrapper th:first-child {
+  background-color: transparent;
+  color: rgb(71, 71, 71);
+}
+
+.table-h-wrapper th:nth-child(2n) {
+  padding: 10px 20px;
+  background: #fe5f4f;
+  color: #fff;
+  font-family: "Sora";
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 0.8rem;
+}
 .ranking-page-wrapper {
   padding-top: 4rem;
   padding-right: 3rem;
@@ -375,26 +527,29 @@ export default {
   margin: 0 auto;
 }
 
-@media (min-width: 600px) {
-  .cards-flex-wrapper {
-    flex-flow: row wrap;
-    justify-content: center;
-  }
-  .card-user-wrapper {
-    flex: 0 1 calc(50% - 4%);
-    margin-right: 2%;
-    margin-left: 2%;
-  }
-  .discover-btn {
-    font-size: 1.3rem;
-    padding: 15px 8px;
-  }
+.btn-wrapper {
+  align-self: center;
 }
-
-@media (min-width: 768px) {
-  .card-user-wrapper {
-    flex: 0 1 calc(33.333333% - 4%);
-    justify-content: flex-start;
-  }
+.sortBySteps {
+  background-color: #fff;
+  border-color: #333;
+  color: #333;
+  width: 140px;
+  font-size: 0.8rem;
+  padding: 10px 5px;
+  border: 2px solid #333;
+}
+.wrapper-cards {
+  display: flex;
+  flex-direction: column;
+}
+.wrapper-rankingCard {
+  margin-top: 2rem;
+  background-color: #e8e8e8;
+  box-shadow: 0px 0px 1px rgb(34 34 34 / 30%);
+  border-radius: 4px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 </style>

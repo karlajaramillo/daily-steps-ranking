@@ -95,4 +95,10 @@ export default {
   font-size: 1.1rem;
   font-weight: 500;
 }
+
+@media (min-width: 650px) {
+  .home h1 {
+    font-size: 5rem;
+  }
+}
 </style>

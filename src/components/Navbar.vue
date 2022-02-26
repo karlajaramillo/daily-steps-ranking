@@ -2,7 +2,7 @@
  <nav class="navbar">
    <div class="wrapper-logo">
     </div>
-    <router-link to="/"><p class="logo">track<span>Me</span></p></router-link>
+    <router-link to="/"><p class="logo">activity<span>Meter</span></p></router-link>
   </nav>
 </template>
 
