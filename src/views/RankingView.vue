@@ -108,9 +108,17 @@ export default {
     this.showRanking();
     //this.showRankingByLastMonth();
     // By last month
-    this.showRankingByLastDate(this.getLastMonth, this.rankingsByLastMonth);
+    this.showRankingByLastDate(
+      this.getLastMonth,
+      this.rankingsByLastMonth,
+      "month"
+    );
     // By last week
-    this.showRankingByLastDate(this.getLastWeek, this.rankingsByLastWeek);
+    this.showRankingByLastDate(
+      this.getLastWeek,
+      this.rankingsByLastWeek,
+      "week"
+    );
   },
   // to make the value reactive
   computed: {
@@ -236,32 +244,15 @@ export default {
       this.rankings = data.results;
       console.log(data.results);
     },
-    // ----- Fetch method to get last month data --
-    // async showRankingByLastMonth() {
-    //   const lastMonth = this.getLastMonth();
-    //   const today = this.getToday();
-    //   const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${lastMonth}&workouts_to=${today}`;
-    //   console.log("today: ", today);
-    //   console.log("lastMonth:", lastMonth);
-    //   console.log("in show ranking by month");
-    //   let data = await fetchPage(endpoint);
-    //   //console.log(`Next: ${data.next}`);
-    //   // while (data.next) {
-    //   //  data = await fetchPage(data.next);ftoken
-    //   //   console.log(data.results);
-    //   //   results.concat(data.results);
-    //   // }
-    //   console.log("after while");
-    //   this.rankingsByLastMonth = data.results;
-    //   console.log("Last month data", data.results);
-    // },
 
-    async showRankingByLastDate(handler, rankingState) {
-      const lastDate = handler();
+    async showRankingByLastDate(handler, rankingState, period) {
+      console.log("IMPORTANT FIELD", period);
+
+      const periodStart = handler();
       const today = this.getToday();
-      const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${lastDate}&workouts_to=${today}`;
+      const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${periodStart}&workouts_to=${today}`;
       console.log("today: ", today);
-      console.log("lastDate:", lastDate);
+      console.log("periodStart:", periodStart);
       let data = await fetchPage(endpoint);
       //console.log(`Next: ${data.next}`);
       // while (data.next) {
@@ -269,10 +260,20 @@ export default {
       //   console.log(data.results);
       //   results.concat(data.results);
       // }
+      const results = data.results.map((userData) => {
+        if (period === "month") userData.avg_steps_month = userData.avg_steps;
+        if (period === "week") userData.avg_steps_week = userData.avg_steps;
+
+        return userData;
+      });
+
+      // console.log(result);
+
       console.log("after while");
       rankingState = data.results;
       console.log("rankingState", rankingState);
-      console.log("Last data", data.results);
+      console.log(period, data.results);
+      console.log("results", [period, results]);
     },
   },
 };
