@@ -18,9 +18,10 @@
             <tr class="table-h-wrapper">
               <th class="table-h">Name</th>
               <!-- <th class="table-h" @click="sortBy('avg_steps')" v-bind:class="[sortBy === 'avg_steps' ? sortDirection : '']">Average Steps</th> -->
-              <th class="table-h" @click="switchOrderProp('avg_steps')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Average Steps</th>
+              <th class="table-h" @click="switchOrderProp('avg_steps')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Overall Steps</th>
               <!-- <th class="table-h" @click="switchOrderProp('avg_steps_week')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last month</th> -->
-              <th class="table-h" @click="switchOrderProp('avg_steps_month')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last week</th>
+              <th class="table-h" @click="switchOrderProp('avg_steps_month')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last month</th>
+              <th class="table-h" @click="switchOrderProp('avg_steps_week')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last week</th>
               <th class="table-h">Discover</th>
             </tr>
           </thead>
@@ -38,22 +39,29 @@
     </div>
 
   <div>
-    <Button text="Sort by last week" @click="switchOrderProp('avg_steps_week')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button> 
+    <Button class="discover-btn" text="Overall Steps" @click="switchOrderProp('avg_steps')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button> 
+    <Button class="discover-btn" text="Last Month" @click="switchOrderProp('avg_steps_month')" v-bind:class="[toggleOrderMonth ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button> 
+    <Button class="discover-btn"  text="Last Week" @click="switchOrderProp('avg_steps_week')" v-bind:class="[toggleOrderWeek ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button> 
 
       <!-- 'sortedArray' is the computed property -->
       <!-- <tr v-for="ranking in rankings" :key="ranking.id">    -->
-      <div v-for="rankingsByLastWeek in sortByAsc" :key="rankingsByLastWeek.id"> 
-        <p>{{rankingsByLastWeek}}</p>       
-        <p>{{rankingsByLastWeek.username}}</p>
+      <div class="card-user-wrapper" v-for="ranking in sortByAsc" :key="ranking.id"> 
+        <div class="username"><h1>{{ranking.username}}</h1></div>
+         <div class="email"><p>e-mail: {{ranking.email}}</p></div>
+        <div><img src="https://cdn-icons-png.flaticon.com/512/2553/2553967.png" alt="profile-image"> </div> 
         
-        <div v-if="rankingsByLastWeek.avg_steps_week">
-            <p>Steps last week: {{rankingsByLastWeek.avg_steps_week}}</p>
+      
+        <div class="ranking-text">
+            <div >
+              <p class="ranking-msg">Average steps</p>
+              <p class="ranking-number">{{ranking.avg_steps}}</p>
+            </div>
         </div>
-          <div v-else>
-      <p>Average Steps last week: Ups! no steps last week.</p>
-      </div>
+          <!-- <div class="ranking-text" v-else>
+            <p >Ups! no steps last week.</p>
+        </div> -->
 
-        <router-link :to="{name: 'userId', params: { id: rankingsByLastWeek.username }}"><Button class="discover-btn" text="Discover"></Button></router-link>
+        <router-link :to="{name: 'userId', params: { id: ranking.username }}"><Button class="details-btn" text="Discover"></Button></router-link>
       </div>
   </div>
 
@@ -154,6 +162,7 @@ export default {
       sortDirection: "asc", // DEFAULT - keep track of the sort order: ascending or descending
       toggleOrder: false,
       toggleOrderMonth: false,
+      toggleOrderWeek: false,
     };
   },
   created: function () {
@@ -175,49 +184,101 @@ export default {
   // to make the value reactive
   computed: {
     // THIS METHOD WORK AND IS REACTIVE - CHANGES THE STATE - ASCENDING
+    // sortByAsc() {
+    //   console.log(this.sortByKey);
+    //   if (this.toggleOrder) {
+    //     let sorted;
+    //     if (this.sortByKey === "avg_steps") {
+    //       console.log(this.sortByKey);
+    //       sorted = this.rankings.sort(
+    //         (a, b) => b[this.sortByKey] - a[this.sortByKey]
+    //       );
+    //     } else if (this.sortByKey === "avg_steps_month") {
+    //       console.log(this.sortByKey);
+    //       sorted = this.rankingsByLastMonth.sort(
+    //         (a, b) => b[this.sortByKey] - a[this.sortByKey]
+    //       );
+    //     } else if (this.sortByKey === "avg_steps_week") {
+    //       console.log(this.sortByKey);
+    //       sorted = this.rankingsByLastWeek.sort(
+    //         (a, b) => b[this.sortByKey] - a[this.sortByKey]
+    //       );
+    //     }
+    //     return sorted;
+    //   } else {
+    //     // return this.rankings.sort(
+    //     //   (a, b) => a[this.sortByKey] - b[this.sortByKey]
+    //     // );
+    //     let sortedDesc;
+    //     if (this.sortByKey === "avg_steps") {
+    //       console.log(this.sortByKey);
+    //       sortedDesc = this.rankings.sort(
+    //         (a, b) => a[this.sortByKey] - b[this.sortByKey]
+    //       );
+    //     } else if (this.sortByKey === "avg_steps_month") {
+    //       console.log(this.sortByKey);
+    //       sortedDesc = this.rankingsByLastMonth.sort(
+    //         (a, b) => a[this.sortByKey] - b[this.sortByKey]
+    //       );
+    //     } else if (this.sortByKey === "avg_steps_week") {
+    //       console.log(this.sortByKey);
+    //       sortedDesc = this.rankingsByLastWeek.sort(
+    //         (a, b) => a[this.sortByKey] - b[this.sortByKey]
+    //       );
+    //     }
+    //     return sortedDesc;
+    //   }
+    // },
+
     sortByAsc() {
       console.log(this.sortByKey);
-      if (this.toggleOrder) {
+      if (this.sortByKey === "avg_steps") {
         let sorted;
-        if (this.sortByKey === "avg_steps") {
+        if (this.toggleOrder) {
+          // Ascendent
           console.log(this.sortByKey);
           sorted = this.rankings.sort(
             (a, b) => b[this.sortByKey] - a[this.sortByKey]
           );
-        } else if (this.sortByKey === "avg_steps_month") {
+        } else {
+          // Descendent
+          console.log(this.sortByKey);
+          sorted = this.rankings.sort(
+            (a, b) => a[this.sortByKey] - b[this.sortByKey]
+          );
+        }
+        return sorted;
+      } else if (this.sortByKey === "avg_steps_month") {
+        let sorted;
+        if (this.toggleOrderMonth) {
+          // Ascendent
           console.log(this.sortByKey);
           sorted = this.rankingsByLastMonth.sort(
             (a, b) => b[this.sortByKey] - a[this.sortByKey]
           );
-        } else if (this.sortByKey === "avg_steps_week") {
+        } else {
+          // Descendent
+          console.log(this.sortByKey);
+          sorted = this.rankingsByLastMonth.sort(
+            (a, b) => a[this.sortByKey] - b[this.sortByKey]
+          );
+        }
+        return sorted;
+      } else if (this.sortByKey === "avg_steps_week") {
+        let sorted;
+        if (this.toggleOrderWeek) {
+          // Ascendent
           console.log(this.sortByKey);
           sorted = this.rankingsByLastWeek.sort(
             (a, b) => b[this.sortByKey] - a[this.sortByKey]
           );
+        } else {
+          console.log(this.sortByKey);
+          sorted = this.rankingsByLastWeek.sort(
+            (a, b) => a[this.sortByKey] - b[this.sortByKey]
+          );
         }
         return sorted;
-      } else {
-        // return this.rankings.sort(
-        //   (a, b) => a[this.sortByKey] - b[this.sortByKey]
-        // );
-        let sortedDesc;
-        if (this.sortByKey === "avg_steps") {
-          console.log(this.sortByKey);
-          sortedDesc = this.rankings.sort(
-            (a, b) => a[this.sortByKey] - b[this.sortByKey]
-          );
-        } else if (this.sortByKey === "avg_steps_month") {
-          console.log(this.sortByKey);
-          sortedDesc = this.rankingsByLastMonth.sort(
-            (a, b) => a[this.sortByKey] - b[this.sortByKey]
-          );
-        } else if (this.sortByKey === "avg_steps_week") {
-          console.log(this.sortByKey);
-          sortedDesc = this.rankingsByLastWeek.sort(
-            (a, b) => a[this.sortByKey] - b[this.sortByKey]
-          );
-        }
-        return sortedDesc;
       }
     },
 
@@ -299,9 +360,15 @@ export default {
     // IMPORTANT
     // with props to change field
     switchOrderProp(prop) {
-      this.toggleOrder = !this.toggleOrder;
       this.sortByKey = prop; //set the field to sort -> 'avg_steps'
-      console.log("toggle", this.toggleOrder);
+      console.log("sortByKey", this.sortByKey);
+      if (this.sortByKey === "avg_steps") {
+        this.toggleOrder = !this.toggleOrder;
+      } else if (this.sortByKey === "avg_steps_weeks") {
+        this.toggleOrderWeek = !this.toggleOrderWeek;
+      } else if (this.sortByKey === "avg_steps_month") {
+        this.toggleOrderMonth = !this.toggleOrderMonth;
+      }
       console.log("sortByKey", this.sortByKey);
     },
 
@@ -393,8 +460,8 @@ export default {
       //rankingState = finalResult;
       if (period === "month") this.rankingsByLastMonth = finalResults;
       if (period === "week") this.rankingsByLastWeek = finalResults;
-      console.log("this.rankingsByLastMonth", this.rankingsByLastMonth);
-      console.log("this.rankingsByLastWeek", this.rankingsByLastWeek);
+      // console.log("this.rankingsByLastMonth", this.rankingsByLastMonth);
+      // console.log("this.rankingsByLastWeek", this.rankingsByLastWeek);
       //console.log("rankingState", rankingState);
       // console.log(period, data.results);
     },
@@ -402,6 +469,72 @@ export default {
 };
 </script>
 <style scoped>
+.card-user-wrapper {
+  margin-top: 2rem;
+  background-color: #f1f1f1;
+  box-shadow: 1px 1px 3px rgb(34 34 34 / 15%);
+  border-radius: 4px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.card-user-wrapper img {
+  width: 200px;
+  border-radius: 50%;
+  background-color: #fffdfd;
+  box-shadow: 0px 0px 4px rgb(34 34 34 / 15%);
+}
+
+.username {
+  text-transform: capitalize;
+  margin-bottom: 1rem;
+}
+
+.email p {
+  color: #8d9190;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.ranking-text .ranking-msg {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.ranking-text .ranking-number {
+  color: #2ac48a;
+  text-shadow: 0px 0px 1px #656464;
+  font-size: 2rem;
+  /* font-weight: 600; */
+  text-align: center;
+  margin: 1rem 0;
+  font-family: "Oswald";
+}
+
+.details-btn {
+  background-color: #fdb12a;
+  border-color: #fdb12a;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 7px 10px;
+  border: 2px solid #fdb12a;
+  margin-top: 0;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.discover-btn:hover {
+  background: #e6b259;
+  border-color: #e6b259;
+  box-shadow: 0 0 8px rgb(0 0 0 / 26%);
+  color: #fff;
+}
+
 table {
   /* border-collapse: collapse; */
   border-spacing: 0;
