@@ -5,8 +5,9 @@
 
   <div class="ranking-page-wrapper">
    
+    <Button class="discover-btn" @click="switchOrder()" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]" text="Daily Average"></Button> 
 
-    <Button class="sortBySteps" @click="sortToggle('avg_steps')" v-bind:class="[sortByKey === 'avg_steps' ? sortDirection : '']" text="Test 1"></Button> 
+    <!-- <Button class="sortBySteps" @click="sortToggle('avg_steps')" v-bind:class="[sortByKey === 'avg_steps' ? sortDirection : '']" text="Test 1"></Button>  -->
 
     <div v-if="rankings.length">
        <!-- <Button class="sortBySteps" @click="sortToggle('avg_steps')" v-bind:class="[sortByKey === 'avg_steps' ? sortDirection : '']" text="Test 1"></Button> 
@@ -17,7 +18,7 @@
             <tr class="table-h-wrapper">
               <th class="table-h">Name</th>
               <!-- <th class="table-h" @click="sortBy('avg_steps')" v-bind:class="[sortBy === 'avg_steps' ? sortDirection : '']">Average Steps</th> -->
-              <th class="table-h" @click="sortBy('avg_steps')">Average Steps</th>
+              <th class="table-h" @click="switchOrder()" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Average Steps</th>
               <th class="table-h">Discover</th>
             </tr>
           </thead>
@@ -95,6 +96,7 @@ export default {
       rankings: [],
       sortByKey: "avg_steps", //key to sort by default
       sortDirection: "asc", // DEFAULT - keep track of the sort order: ascending or descending
+      toggleOrder: false,
     };
   },
   created: function () {
@@ -104,9 +106,15 @@ export default {
   computed: {
     // THIS METHOD WORK AND IS REACTIVE - CHANGES THE STATE - ASCENDING
     sortByAsc() {
-      return this.rankings.sort(
-        (a, b) => b[this.sortByKey] - a[this.sortByKey]
-      );
+      if (this.toggleOrder) {
+        return this.rankings.sort(
+          (a, b) => b[this.sortByKey] - a[this.sortByKey]
+        );
+      } else {
+        return this.rankings.sort(
+          (a, b) => a[this.sortByKey] - b[this.sortByKey]
+        );
+      }
     },
 
     // THIS METHOD WORK AND IS REACTIVE - CHANGES THE STATE - ASCENDING
@@ -114,7 +122,7 @@ export default {
     // sortByAsc() {
     //   return this.rankings.sort((a, b) => {
     //     let modifier = 1;
-    //     if (this.sortDirection === "desc") modifier = -1;
+    //     //if (this.sortDirection === "desc") modifier = -1;
     //     return a[this.sortByKey] < b[this.sortByKey]
     //       ? -1 * modifier
     //       : a[this.sortByKey] > a[this.sortByKey]
@@ -147,18 +155,22 @@ export default {
   methods: {
     // ----- SORT METHODS --
     // THIS METHOD WORKS WITH CLICK- BUT DON'T CHANGE THE STATE
-    sortBy(prop) {
-      this.rankings.sort((a, b) => b[prop] - a[prop]);
-    },
-    // OPTION 1 - IT WORKS - to change the property
-    // to change the sortBy ->keep track of the property to sort, and sortDirection of the arrow
-    sortToggle(s) {
-      if (s === this.sortByKey) {
-        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
-      }
-      this.sortByKey = s;
-      console.log("sortByKey", this.sortByKey);
-      console.log("sortDirection", this.sortDirection);
+    // sortBy(prop) {
+    //   this.rankings.sort((a, b) => b[prop] - a[prop]);
+    // },
+    // // OPTION 1 - IT WORKS - to change the property
+    // // to change the sortBy ->keep track of the property to sort, and sortDirection of the arrow
+    // sortToggle(s) {
+    //   if (s === this.sortByKey) {
+    //     this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+    //   }
+    //   this.sortByKey = s;
+    //   console.log("sortByKey", this.sortByKey);
+    //   console.log("sortDirection", this.sortDirection);
+    // },
+    switchOrder() {
+      this.toggleOrder = !this.toggleOrder;
+      console.log("toggle", this.toggleOrder);
     },
     // ----- END - SORT METHODS --
 
