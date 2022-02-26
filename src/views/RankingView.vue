@@ -18,7 +18,10 @@
             <tr class="table-h-wrapper">
               <th class="table-h">Name</th>
               <!-- <th class="table-h" @click="sortBy('avg_steps')" v-bind:class="[sortBy === 'avg_steps' ? sortDirection : '']">Average Steps</th> -->
+              <!-- <th class="table-h" @click="switchOrder('avg_steps')" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Average Steps</th> -->
               <th class="table-h" @click="switchOrder()" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Average Steps</th>
+              <th class="table-h" @click="switchOrder()" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last month</th>
+              <th class="table-h" @click="switchOrder()" v-bind:class="[toggleOrder ? sortDirection = 'asc': sortDirection = 'desc' ]">Last week</th>
               <th class="table-h">Discover</th>
             </tr>
           </thead>
@@ -29,7 +32,7 @@
               <td>{{ranking.username}}</td>
               <td>{{ranking.avg_steps}}</td>
               <td> <router-link :to="{name: 'userId', params: { id: ranking.username }}"><Button class="discover-btn" text="Discover"></Button></router-link>
-</td>
+              </td>
             </tr>
           </tbody>
       </table>
@@ -94,6 +97,8 @@ export default {
   data() {
     return {
       rankings: [],
+      rankingsByLastMonth: [], // metric from last month to know
+      rankingsByLastWeek: [], // metric from last day to know
       sortByKey: "avg_steps", //key to sort by default
       sortDirection: "asc", // DEFAULT - keep track of the sort order: ascending or descending
       toggleOrder: false,
@@ -101,6 +106,7 @@ export default {
   },
   created: function () {
     this.showRanking();
+    this.showRankingByLastMonth();
   },
   // to make the value reactive
   computed: {
@@ -168,13 +174,47 @@ export default {
     //   console.log("sortByKey", this.sortByKey);
     //   console.log("sortDirection", this.sortDirection);
     // },
+    // with props to change field
+    // switchOrder(prop) {
+    //   this.toggleOrder = !this.toggleOrder;
+    //   this.sortByKey = prop; //set the field to sort -> 'avg_steps'
+    //   console.log("toggle", this.toggleOrder);
+    //   console.log("sortByKey", this.sortByKey);
+    // },
     switchOrder() {
       this.toggleOrder = !this.toggleOrder;
       console.log("toggle", this.toggleOrder);
+      console.log("sortByKey", this.sortByKey);
     },
     // ----- END - SORT METHODS --
 
-    // Fetch
+    // ----- Method to get today in format YY-MM-DD --
+    getToday() {
+      const today = new Date();
+      return today.toISOString().split("T").slice(0, 1).join();
+    },
+    // ----- Method to find last week data --
+    getLastWeek() {
+      const today = new Date();
+      const lastweek = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() - 7
+      );
+      return lastweek.toISOString().split("T").slice(0, 1).join();
+    }, // Result -> '2022-02-18'
+    // ----- Method to find last month data --
+    getLastMonth() {
+      const today = new Date();
+      const lastmonth = new Date(
+        today.getFullYear(),
+        today.getMonth() - 1,
+        today.getDate()
+      );
+      return lastmonth.toISOString().split("T").slice(0, 1).join();
+    }, // Result -> '2022-01-25'
+
+    // ----- Fetch method to get daily average --
     async showRanking() {
       console.log("in show ranking");
       let data = await fetchPage(
@@ -182,7 +222,7 @@ export default {
       );
       //console.log(`Next: ${data.next}`);
       // while (data.next) {
-      //  data = await fetchPage(data.next);
+      //  data = await fetchPage(data.next);ftoken
       //   console.log(data.results);
       //   results.concat(data.results);
       // }
@@ -190,6 +230,26 @@ export default {
       this.rankings = data.results;
       rankings: this.rankings;
       console.log(data.results);
+    },
+    // ----- Fetch method to get last month data --
+    async showRankingByLastMonth() {
+      const lastMonth = this.getLastMonth();
+      const today = this.getToday();
+      const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${lastMonth}&workouts_to=${today}`
+      console.log("today: ", today);
+      console.log("lastMonth:", lastMonth);
+      console.log("in show ranking by month");
+      let data = await fetchPage(endpoint);
+      //console.log(`Next: ${data.next}`);
+      // while (data.next) {
+      //  data = await fetchPage(data.next);ftoken
+      //   console.log(data.results);
+      //   results.concat(data.results);
+      // }
+      console.log("after while");
+      this.rankingsByLastMonth = data.results;
+      rankingsByLastMonth: this.rankingsByLastMonth;
+      console.log("Last month data", data.results);
     },
   },
 };
