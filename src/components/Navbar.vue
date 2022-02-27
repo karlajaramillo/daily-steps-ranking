@@ -21,10 +21,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background-color: #ddce1b;
+  background-color: #efe02b;
   position: fixed;
   min-width: 100%;
-  box-shadow: 5px 5px 15px rgb(34 34 34 / 30%);
+  box-shadow: 2px 2px 10px rgb(34 34 34 / 30%);
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   z-index: 5000;
