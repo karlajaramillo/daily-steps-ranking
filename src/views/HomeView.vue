@@ -65,13 +65,7 @@ export default {
   color: #fff;
   font-family: "Lobster", cursive;
   font-size: 3rem;
-  text-shadow: 1px 1px 10px #000;
-}
-.wrapper-icon {
-  /* position: absolute;
-  bottom: 10%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
+  text-shadow: 0px 0px 8px #000;
 }
 .icon-arrow {
   position: absolute;

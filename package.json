@@ -14,7 +14,9 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "apexcharts": "^3.33.1",
     "core-js": "^3.8.3",
+    "dayjs": "^1.10.7",
     "vue": "^3.2.13",
+    "vue-dayjs": "^1.0.2",
     "vue-router": "^4.0.3",
     "vue3-apexcharts": "^1.4.1"
   },
