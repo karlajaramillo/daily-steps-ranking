@@ -1,14 +1,13 @@
 <template lang="">
     <div v-if="userData" >
-      <apexchart width="500" type="bar" :options="options" :series="series"></apexchart>
-        
-         <p>{{userData}}</p>
+      <apexchart width="500" type="bar" :options="options" :series="series"></apexchart>       
+         <!-- <p>{{userData}}</p>
          <p>{{period}}</p>
          <p>{{categoryArray}}</p>
          <p>{{category}}</p>
          <p>{{dataByWeek}}</p>
     
-       
+        -->
     </div>
   <h1 class="load" v-else>On the way 🚀...</h1>
     
@@ -23,6 +22,7 @@ export default {
     categoryArray: Array,
     category: String,
     byWeek: Map,
+    colorChart: String,
   },
   data: function () {
     return {
@@ -33,12 +33,30 @@ export default {
         xaxis: {
           categories: this.period,
         },
+        fill: {
+          colors: [this.colorChart],
+        },
+        chart: {
+          fontFamily: "Quicksand",
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 5,
+          },
+        },
+        dataLabels: {
+          enabled: true,
+          style: {
+            colors: ["#494947"],
+          },
+        },
+        title: {
+          text: this.category,
+        },
       },
       series: [
         {
-          //name: "Steps",
           data: this.categoryArray,
-          //data: this.steps,
         },
       ],
     };
@@ -50,11 +68,11 @@ export default {
   methods: {
     updateChart() {
       //pop up
-      console.log(this.dataByWeek); //undefined
-      console.log(this.period);
-      console.log("categoryArray", this.categoryArray);
-      console.log(this.userData);
-      console.log(this.category);
+      // console.log(this.dataByWeek); //undefined
+      // console.log(this.period);
+      // console.log("categoryArray", this.categoryArray);
+      // console.log(this.userData);
+      // console.log(this.category);
       this.series = [
         {
           name: this.category, // update the graph

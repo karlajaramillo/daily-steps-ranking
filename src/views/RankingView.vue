@@ -251,7 +251,7 @@ export default {
 .card-user-wrapper {
   padding-top: 10rem;
   margin-top: 2rem;
-  background-color: #f1f1f1;
+  background-color: #fcfcfc;
   box-shadow: 1px 1px 3px rgb(34 34 34 / 15%);
   border-radius: 4px;
   padding: 1rem;

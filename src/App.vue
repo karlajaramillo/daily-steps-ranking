@@ -87,7 +87,7 @@ body {
   width: 100%;
   height: auto;
   margin: 0;
-  background-color: #fcfcfc;
+ background-color: #f5f5f5;
   color: #333333;
 }
 

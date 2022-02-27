@@ -5,39 +5,15 @@
     <h1>Uncover your data, and go the the next level</h1>
     <p><span class="msg">"</span>Check statistics and keep your productivity up<span class="msg">" </span> <span class="author"> by Mary Bye</span></p>
   </div>
-   <p>User Id {{ userData }}</p>
-   <div>
-         <BarChart :category="categorySteps" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getSteps"/>
-    <BarChart :category="categoryCalories" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getCalories"/>
-    <BarChart :category="categoryActive" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getActiveMinutes"/>
-    <BarChart :category="categoryDistance" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getDistance"/>
-
+  <h1 class="welcome-user">Your Last Report <span class="username">@{{ username }}</span></h1>
+  <div class="barCharts-wrapper">
+    <BarChart class="barChart" :colorChart="colorSteps" :category="categorySteps" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getSteps"/>
+    <BarChart class="barChart" :colorChart="colorCalories" :category="categoryCalories" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getCalories"/>
+    <BarChart class="barChart" :colorChart="colorDistance" :category="categoryDistance" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getDistance"/>
+    <BarChart class="barChart" :colorChart="colorActive" :category="categoryActive" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getActiveMinutes"/>
    </div>
+  <h1 class="welcome-user">Track your activity at a glance</h1>
 
-    <p>Welcome Username: {{ $route.params }}</p>
-    <h1>Hello {{ username }}</h1>
-    <p>{{getByWeek}}</p>
-   
-  <!-- <div>
-    <table border="">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Active minutes</th>
-          <th>Calories</th>
-          <th>Distance</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in userData" :key="user.id">
-          <td>{{user.date}}</td>
-          <td>{{user.active_minutes}}</td>
-          <td>{{user.calories}}</td>
-          <td>{{user.distance}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div> -->
   </div>
   <div v-else>
     <p class="loading">Loading ranking...</p>
@@ -50,8 +26,8 @@ import BarChart from "../components/BarChart.vue";
 import image from "../assets/photo-users.png";
 
 const fetchPage = async (url) => {
-  console.log("in fetchPage");
-  console.log(url);
+  //console.log("in fetchPage");
+  //console.log(url);
   try {
     const res = await fetch(url, {
       method: "GET",
@@ -78,6 +54,10 @@ export default {
       categoryCalories: "Calories",
       categoryDistance: "Distance",
       categoryActive: "Active minutes",
+      colorSteps: "#ff685c",
+      colorCalories: "#ffd06a",
+      colorDistance: "#32bfd1",
+      colorActive: "#dbcf41",
       dataByWeek: null,
       image: image, // bind image to my component
     };
@@ -90,20 +70,6 @@ export default {
     this.showUser();
   },
   computed: {
-    // Vue knows when to update the DOM
-    // getCategory(category) {
-    //   if (category === "date") {
-    //     return this.userData.map((item) => item.date);
-    //   } else if (category === "steps") {
-    //     return this.userData.map((item) => item.steps);
-    //   } else if (category === "calories") {
-    //     return this.userData.map((item) => item.calories);
-    //   } else if (category === "distance") {
-    //     return this.userData.map((item) => item.distance);
-    //   } else if (category === "active_minutes") {
-    //     return this.userData.map((item) => item.active_minutes);
-    //   }
-    // },
     getPeriod() {
       console.log("period Series");
       console.log(this.userData.map((item) => item.date));
@@ -204,6 +170,10 @@ export default {
 };
 </script>
 <style scoped>
+.username {
+  text-transform: capitalize;
+  margin-bottom: 1rem;
+}
 .wrapper-user-card {
   background-color: #98dfea;
   /* background: linear-gradient(
@@ -250,6 +220,12 @@ export default {
 .image-wrapper {
   margin-top: 20%;
 }
+.barChart {
+  background-color: #fcfcfc;
+  margin: 1rem;
+  padding: 2rem;
+}
+
 @media (min-width: 600px) {
   .wrapper-user-card {
     padding: 6rem 6rem;
@@ -273,6 +249,19 @@ export default {
   }
   .wrapper-user-card .author {
     font-size: 1rem;
+  }
+  .barCharts-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: #f2f2f2;
+    margin: 3rem;
+    border-radius: 8px;
+  }
+  .welcome-user {
+    margin-top: 2rem;
+    text-align: center;
+    color: #494947;
   }
 }
 </style>
