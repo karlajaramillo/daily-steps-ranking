@@ -211,7 +211,7 @@ export default {
     async showRanking() {
       //console.log("in show ranking");
       let data = await fetchPage(
-        "https://step-meter-pp4publmdq-ez.a.run.app/users"
+        "https://step-meter-pp4publmdq-ez.a.run.app/users/"
       );
       //console.log(`Next: ${data.next}`);
       // while (data.next) {
