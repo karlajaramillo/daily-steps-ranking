@@ -328,7 +328,7 @@ export default {
 
 .wrapper-buttons {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
 .discover-btn {

@@ -96,42 +96,6 @@ export default {
       //active_minutes
       return this.userData.map((item) => item.active_minutes);
     },
-    getByWeek() {
-      const data = new Map();
-      const keys = [];
-      const emptyData = {
-        steps: 0,
-        distance: 0,
-        calories: 0,
-        active_minutes: 0,
-      };
-
-      for (let i = 1; i <= 52; i++) {
-        keys.push(`2021-W${i}`);
-      }
-
-      for (let i = 1; i <= 12; i++) {
-        keys.push(`2022-W${i}`);
-      }
-
-      for (let key of keys) {
-        data.set(key, emptyData);
-      }
-
-      this.userData.forEach((workout) => {
-        const date = new Date(workout.date);
-        const key = `${date.getFullYear()}-W${this.weekOfYear(workout.date)}`;
-        const currentData = data.get(key);
-        const updatedData = {
-          steps: currentData.steps + workout.steps,
-          distance: currentData.distance + workout.distance,
-          calories: currentData.calories + workout.calories,
-          active_minutes: currentData.active_minutes + workout.active_minutes,
-        };
-        data.set(key, updatedData);
-      });
-      return data;
-    },
   },
   methods: {
     // Get today in the format -> 2022-28-02
