@@ -12,7 +12,12 @@
     <BarChart class="barChart" :colorChart="colorDistance" :category="categoryDistance" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getDistance"/>
     <BarChart class="barChart" :colorChart="colorActive" :category="categoryActive" :dataByWeek="dataByWeek" :userData="userData" :period="getPeriod" :categoryArray="getActiveMinutes"/>
    </div>
-  <h1 class="welcome-user">Track your activity at a glance</h1>
+  <div class="heatmap-container">
+    <h1 class="welcome-user">Track your activity at a glance</h1>
+    <div class="heatmap-wrapper">
+      <HeatMap class="heatmapChart" :userData="userData" :period="getPeriod" :steps="getSteps" :calories="getCalories" :distance="getDistance" :active="getActiveMinutes"></HeatMap>
+    </div>
+  </div>
 
   </div>
   <div v-else>
@@ -22,9 +27,9 @@
 </template>
 <script>
 // import components
+import HeatMap from "./HeatMapGraph.vue";
 import BarChart from "../components/BarChart.vue";
 import image from "../assets/photo-users.png";
-
 const fetchPage = async (url) => {
   //console.log("in fetchPage");
   //console.log(url);
@@ -64,7 +69,9 @@ export default {
   },
   name: "UserIdCard",
   components: {
+    //register all the components imported
     BarChart,
+    HeatMap,
   },
   created: function () {
     this.showUser();
@@ -86,7 +93,7 @@ export default {
       return this.userData.map((item) => item.calories);
     },
     getDistance() {
-      return this.userData.map((item) => item.distance);
+      return this.userData.map((item) => Math.floor(item.distance));
     },
     getActiveMinutes() {
       //active_minutes
@@ -224,11 +231,27 @@ export default {
   background-color: #fcfcfc;
   margin: 1rem;
   padding: 2rem;
+  border-radius: 8px;
+}
+
+.heatmapChart {
+  background-color: #fcfcfc;
+  margin: 1rem;
+  padding: 4rem;
+  border-radius: 8px;
+  width: 100%;
 }
 .welcome-user {
   margin-top: 2rem;
   text-align: center;
   color: #494947;
+}
+
+.heatmap-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  border-radius: 8px;
 }
 
 @media (min-width: 600px) {
@@ -259,12 +282,16 @@ export default {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
-    background: #f2f2f2;
     margin: 3rem;
-    border-radius: 8px;
   }
   .barCharts-wrapper * > {
     flex: 50%;
+  }
+  .heatmapChart {
+    display: flex;
+    justify-content: center;
+    margin: 3rem;
+    width: 100%;
   }
 }
 </style>
