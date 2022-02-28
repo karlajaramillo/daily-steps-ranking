@@ -284,8 +284,8 @@ export default {
     justify-content: center;
     margin: 3rem;
   }
-  .barCharts-wrapper * > {
-    flex: 50%;
+  .barCharts-wrapper .barChart {
+    width: 33%;
   }
   .heatmapChart {
     display: flex;
