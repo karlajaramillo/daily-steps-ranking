@@ -46,20 +46,17 @@ import boy1 from "../assets/boy-1.png";
 import boy2 from "../assets/boy-2.png";
 import girl1 from "../assets/girl-1.png";
 import girl2 from "../assets/girl-2.png";
+import axios from "axios";
 
 const fetchPage = async (url) => {
-  //console.log("in fetchPage");
-  //console.log(url);
   try {
-    const res = await fetch(url, {
-      method: "GET",
+    const res = await axios.get(url, {
       headers: {
         "Content-type": "application/json",
-        // Authorization: "Token af61aed7399dc6a636e443cdc8a2d55db97c524a",
         Authorization: "Token af61aed7399dc6a636e443cdc8a2d55db97c524a",
       },
     });
-    const data = await res.json();
+    const data = await res.data;
     //console.log(data);
     return data;
   } catch (err) {
@@ -233,15 +230,9 @@ export default {
       const periodStart = handler();
       const today = this.getToday();
       const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${periodStart}&workouts_to=${today}`;
-      //console.log("today: ", today);
-      //console.log("periodStart:", periodStart);
+
       let data = await fetchPage(endpoint);
-      //console.log(`Next: ${data.next}`);
-      // while (data.next) {
-      //  data = await fetchPage(data.next);ftoken
-      //   console.log(data.results);
-      //   results.concat(data.results);
-      // }
+
       const finalResults = data.results.map((userData) => {
         if (period === "month") userData.avg_steps_month = userData.avg_steps;
         if (period === "week") userData.avg_steps_week = userData.avg_steps;
