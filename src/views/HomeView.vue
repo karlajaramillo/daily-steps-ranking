@@ -65,7 +65,7 @@ export default {
   color: #fff;
   font-family: "Lobster", cursive;
   font-size: 3rem;
-  text-shadow: 0px 0px 8px #000;
+  text-shadow: 1px 1px 5px rgb(73 71 71);
 }
 .icon-arrow {
   position: absolute;
