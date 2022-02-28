@@ -42,6 +42,11 @@ import RankingCard from "../components/RankingCard.vue";
 import Button from "../components/Button.vue";
 import girl from "../assets/girl.png";
 import boy from "../assets/runner.png";
+import boy1 from "../assets/boy-1.png";
+import boy2 from "../assets/boy-2.png";
+import girl1 from "../assets/girl-1.png";
+import girl2 from "../assets/girl-2.png";
+
 const fetchPage = async (url) => {
   //console.log("in fetchPage");
   //console.log(url);
@@ -155,7 +160,7 @@ export default {
   methods: {
     // Get random images
     getRandom() {
-      const images = [boy, girl];
+      const images = [boy, girl, boy1, boy2, girl1, girl2];
       //console.log(images);
       return images[Math.floor(Math.random() * images.length)];
     },
@@ -163,7 +168,6 @@ export default {
     // with props to change field
     switchOrderProp(prop) {
       this.sortByKey = prop; //set the field to sort -> 'avg_steps'
-      alert("entering switch");
       console.log("sortByKey", this.sortByKey);
       if (this.sortByKey === "avg_steps") {
         this.toggleOrder = !this.toggleOrder;
