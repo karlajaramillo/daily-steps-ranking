@@ -30,20 +30,18 @@
 import HeatMap from "./HeatMapGraph.vue";
 import BarChart from "../components/BarChart.vue";
 import image from "../assets/photo-users.png";
+import axios from "axios";
+
 const fetchPage = async (url) => {
-  //console.log("in fetchPage");
-  //console.log(url);
   try {
-    const res = await fetch(url, {
-      method: "GET",
+    const res = await axios.get(url, {
       headers: {
         "Content-type": "application/json",
         Authorization: "Token af61aed7399dc6a636e443cdc8a2d55db97c524a",
       },
     });
-    const data = await res.json();
-    console.log(data);
-    return data;
+
+    return res.data;
   } catch (err) {
     console.log(err);
   }
@@ -53,7 +51,6 @@ export default {
   data() {
     return {
       username: this.$route.params.id,
-      //username: this.$route.params.id,
       userData: null,
       categorySteps: "Steps",
       categoryCalories: "Calories",
@@ -162,16 +159,8 @@ export default {
       let data = await fetchPage(
         `https://step-meter-pp4publmdq-ez.a.run.app/${this.username}/workouts/`
       );
-      //console.log(`Next: ${data.next}`);
-      // while (data.next) {
-      //  data = await fetchPage(data.next);
-      //   console.log(data.results);
-      //   results.concat(data.results);
-      // }
-      console.log("after while");
+
       this.userData = data.results;
-      console.log(this.userData);
-      console.log(data.results);
     },
   },
 };

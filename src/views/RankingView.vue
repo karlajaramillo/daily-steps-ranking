@@ -56,9 +56,8 @@ const fetchPage = async (url) => {
         Authorization: "Token af61aed7399dc6a636e443cdc8a2d55db97c524a",
       },
     });
-    const data = await res.data;
-    //console.log(data);
-    return data;
+;
+    return res.data;
   } catch (err) {
     console.log(err);
   }
