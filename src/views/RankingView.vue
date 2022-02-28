@@ -56,8 +56,16 @@ const fetchPage = async (url) => {
         Authorization: "Token af61aed7399dc6a636e443cdc8a2d55db97c524a",
       },
     });
-;
-    return res.data;
+
+    let results = res.data.results;
+
+    if (res.data.next) {
+      const next = new URL(res.data.next);
+      next.protocol = "https";
+      const page = await fetchPage(next.toString());
+      results = [...results, ...page];
+    }
+    return results;
   } catch (err) {
     console.log(err);
   }
@@ -209,18 +217,9 @@ export default {
     // ----- Fetch method to get daily average --
     async showRanking() {
       //console.log("in show ranking");
-      let data = await fetchPage(
+      this.rankings = await fetchPage(
         "https://step-meter-pp4publmdq-ez.a.run.app/users/"
       );
-      //console.log(`Next: ${data.next}`);
-      // while (data.next) {
-      //  data = await fetchPage(data.next);ftoken
-      //   console.log(data.results);
-      //   results.concat(data.results);
-      // }
-      //console.log("after while");
-      this.rankings = data.results;
-      //console.log(data.results);
     },
 
     async showRankingByLastDate(handler, rankingState, period) {
@@ -232,7 +231,7 @@ export default {
 
       let data = await fetchPage(endpoint);
 
-      const finalResults = data.results.map((userData) => {
+      const finalResults = data.map((userData) => {
         if (period === "month") userData.avg_steps_month = userData.avg_steps;
         if (period === "week") userData.avg_steps_week = userData.avg_steps;
 
