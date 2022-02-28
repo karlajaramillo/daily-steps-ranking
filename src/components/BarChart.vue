@@ -1,6 +1,6 @@
 <template lang="">
     <div v-if="userData" >
-      <apexchart width="500" type="bar" :options="options" :series="series"></apexchart>       
+      <apexchart class="barChart" height="400" type="bar" :options="options" :series="series"></apexchart>       
          <!-- <p>{{userData}}</p>
          <p>{{period}}</p>
          <p>{{categoryArray}}</p>
@@ -48,10 +48,15 @@ export default {
           enabled: true,
           style: {
             colors: ["#494947"],
+            fontSize: ".8rem",
           },
         },
         title: {
           text: this.category,
+          style: {
+            fontSize: "20px",
+            fontWeight: "600",
+          },
         },
       },
       series: [
@@ -86,5 +91,18 @@ export default {
 <style scoped>
 .load {
   padding-top: 6rem;
+}
+.apexcharts-canvas {
+}
+.barChart {
+  /* width: 350px;
+  height: 250px;
+  overflow: scroll; */
+}
+
+@media (min-width: 600px) {
+  .barChart {
+    overflow: unset;
+  }
 }
 </style>

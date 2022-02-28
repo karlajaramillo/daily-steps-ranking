@@ -182,7 +182,7 @@ export default {
     rgba(72, 152, 213, 1) 100%
   ); */
   width: 100%;
-  padding: 2rem 1rem;
+  padding: 2rem 2.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -225,6 +225,11 @@ export default {
   margin: 1rem;
   padding: 2rem;
 }
+.welcome-user {
+  margin-top: 2rem;
+  text-align: center;
+  color: #494947;
+}
 
 @media (min-width: 600px) {
   .wrapper-user-card {
@@ -252,16 +257,14 @@ export default {
   }
   .barCharts-wrapper {
     display: flex;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     justify-content: center;
     background: #f2f2f2;
     margin: 3rem;
     border-radius: 8px;
   }
-  .welcome-user {
-    margin-top: 2rem;
-    text-align: center;
-    color: #494947;
+  .barCharts-wrapper * > {
+    flex: 50%;
   }
 }
 </style>
