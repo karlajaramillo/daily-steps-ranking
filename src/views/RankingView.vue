@@ -229,7 +229,7 @@ export default {
 
       const periodStart = handler();
       const today = this.getToday();
-      const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${periodStart}&workouts_to=${today}`;
+      const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users/?workouts_from=${periodStart}&workouts_to=${today}`;
 
       let data = await fetchPage(endpoint);
 

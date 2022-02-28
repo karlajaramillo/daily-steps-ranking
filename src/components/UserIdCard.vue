@@ -160,7 +160,7 @@ export default {
     async showUser() {
       console.log("in show ranking");
       let data = await fetchPage(
-        `https://step-meter-pp4publmdq-ez.a.run.app/${this.username}/workouts`
+        `https://step-meter-pp4publmdq-ez.a.run.app/${this.username}/workouts/`
       );
       //console.log(`Next: ${data.next}`);
       // while (data.next) {
