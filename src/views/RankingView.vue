@@ -1,6 +1,6 @@
 <template lang="">
   <Navbar />
-  <RankingCard />
+  <!-- <RankingCard /> -->
   <!-- <RankingCard title="Karla" @add-ranking="addRanking"/> -->
 
   <div class="ranking-page-wrapper">
@@ -11,7 +11,7 @@
       <Button class="discover-btn"  text="Last Week" @click="switchOrderProp('avg_steps_week')" v-bind:class="[toggleOrderWeek ? sortDirection = 'asc': sortDirection = 'desc' ]"></Button> 
     </div>
     <div class="cards-flex-wrapper">
-            <!-- 'sortedByAsc' is the computed property -->
+      <!-- 'sortedByAsc' is the computed property -->
       <div class="card-user-wrapper" v-for="ranking in sortByAsc" :key="ranking.id">
         <div class="username"><h1>{{ranking.username}}</h1></div>
         <div class="email"><p>e-mail: {{ranking.email}}</p></div>
@@ -43,8 +43,8 @@ import Button from "../components/Button.vue";
 import girl from "../assets/girl.png";
 import boy from "../assets/runner.png";
 const fetchPage = async (url) => {
-  console.log("in fetchPage");
-  console.log(url);
+  //console.log("in fetchPage");
+  //console.log(url);
   try {
     const res = await fetch(url, {
       method: "GET",
@@ -55,7 +55,7 @@ const fetchPage = async (url) => {
       },
     });
     const data = await res.json();
-    console.log(data);
+    //console.log(data);
     return data;
   } catch (err) {
     console.log(err);
@@ -115,32 +115,35 @@ export default {
           );
         }
         return sorted;
-      } else if (this.sortByKey === "avg_steps_month") {
+      }
+      if (this.sortByKey === "avg_steps_month") {
         let sorted;
         if (this.toggleOrderMonth) {
           // Ascendent
-          console.log(this.sortByKey);
+          //console.log(this.sortByKey);
           sorted = this.rankingsByLastMonth.sort(
             (a, b) => b[this.sortByKey] - a[this.sortByKey]
           );
         } else {
           // Descendent
-          console.log(this.sortByKey);
+          //console.log(this.sortByKey);
           sorted = this.rankingsByLastMonth.sort(
             (a, b) => a[this.sortByKey] - b[this.sortByKey]
           );
         }
         return sorted;
-      } else if (this.sortByKey === "avg_steps_week") {
+      }
+      if (this.sortByKey === "avg_steps_week") {
         let sorted;
-        if (this.toggleOrderWeek) {
+        if (("by week - toggle order:", this.toggleOrderWeek)) {
+          console.log("ASC!!!");
           // Ascendent
-          console.log(this.sortByKey);
+          console.log("by week - key:", this.sortByKey);
           sorted = this.rankingsByLastWeek.sort(
             (a, b) => b[this.sortByKey] - a[this.sortByKey]
           );
         } else {
-          console.log(this.sortByKey);
+          console.log("by week - DESC:", this.sortByKey);
           sorted = this.rankingsByLastWeek.sort(
             (a, b) => a[this.sortByKey] - b[this.sortByKey]
           );
@@ -153,22 +156,26 @@ export default {
     // Get random images
     getRandom() {
       const images = [boy, girl];
-      console.log(images);
+      //console.log(images);
       return images[Math.floor(Math.random() * images.length)];
     },
     // ----- SORT METHODS --
     // with props to change field
     switchOrderProp(prop) {
       this.sortByKey = prop; //set the field to sort -> 'avg_steps'
+      alert("entering switch");
       console.log("sortByKey", this.sortByKey);
       if (this.sortByKey === "avg_steps") {
         this.toggleOrder = !this.toggleOrder;
-      } else if (this.sortByKey === "avg_steps_weeks") {
+      }
+      if (this.sortByKey === "avg_steps_week") {
+        console.log("switch my week");
         this.toggleOrderWeek = !this.toggleOrderWeek;
-      } else if (this.sortByKey === "avg_steps_month") {
+      }
+      if (this.sortByKey === "avg_steps_month") {
+        console.log("switch my month");
         this.toggleOrderMonth = !this.toggleOrderMonth;
       }
-      console.log("sortByKey", this.sortByKey);
     },
 
     // ----- Method to get today in format YY-MM-DD --
@@ -184,7 +191,7 @@ export default {
         today.getMonth(),
         today.getDate() - 7
       );
-      console.log(lastweek);
+      //console.log(lastweek);
       return lastweek.toISOString().split("T").slice(0, 1).join();
     }, // Result -> '2022-02-18'
     // ----- Method to find last month data --
@@ -201,7 +208,7 @@ export default {
 
     // ----- Fetch method to get daily average --
     async showRanking() {
-      console.log("in show ranking");
+      //console.log("in show ranking");
       let data = await fetchPage(
         "https://step-meter-pp4publmdq-ez.a.run.app/users"
       );
@@ -211,19 +218,19 @@ export default {
       //   console.log(data.results);
       //   results.concat(data.results);
       // }
-      console.log("after while");
+      //console.log("after while");
       this.rankings = data.results;
-      console.log(data.results);
+      //console.log(data.results);
     },
 
     async showRankingByLastDate(handler, rankingState, period) {
-      console.log("IMPORTANT FIELD", period);
+      //console.log("IMPORTANT FIELD", period);
 
       const periodStart = handler();
       const today = this.getToday();
       const endpoint = `https://step-meter-pp4publmdq-ez.a.run.app/users?workouts_from=${periodStart}&workouts_to=${today}`;
-      console.log("today: ", today);
-      console.log("periodStart:", periodStart);
+      //console.log("today: ", today);
+      //console.log("periodStart:", periodStart);
       let data = await fetchPage(endpoint);
       //console.log(`Next: ${data.next}`);
       // while (data.next) {
