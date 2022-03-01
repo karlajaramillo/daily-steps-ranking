@@ -42,6 +42,7 @@ API URL: https://step-meter-pp4publmdq-ez.a.run.app
 - The API returns `next` and `previous` links as `http` URLs, where they should use `https`. To work around this, I switched the `next` URLs to `https`.
 
 ## Further improvements for the App
+- Instead of fetching data from the API using 'next', I can make only one request using the limit of 100 to make it more efficient: http://step-meter-pp4publmdq-ez.a.run.app/users/?limit=100
 - Implement a reusable Pagination component as a solution to separate pages for the results returned by the API, separating them into pages. This will allow the user to view data page by page. Page: /ranking 
 - Group workout data in graphs by week and month. Page: /userId/:id
 
